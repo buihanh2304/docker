@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ "$1" == "no-cache" ] ; then
+    docker-compose build --no-cache nginx mysql phpmyadmin redis workspace mailhog
+else
+    docker-compose build nginx mysql phpmyadmin redis workspace mailhog
+fi

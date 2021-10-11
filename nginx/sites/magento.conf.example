@@ -1,0 +1,16 @@
+upstream fastcgi_backend {
+    server  php-fpm:9000;
+}
+
+server {
+    listen 80;
+
+    #listen 443 ssl;
+    #ssl_certificate /etc/nginx/ssl/localhost.crt;
+    #ssl_certificate_key /etc/nginx/ssl/localhost.key;
+
+    server_name laradock.dev;
+    set $MAGE_ROOT /var/www;
+    set $MAGE_DEBUG_SHOW_ARGS 0;
+    include /var/www/nginx.conf.sample;
+}
