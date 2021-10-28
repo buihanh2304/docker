@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker-compose up --build -d nginx mysql phpmyadmin redis workspace mailhog
+docker-compose up -d nginx mysql phpmyadmin redis workspace mailhog elasticsearch
