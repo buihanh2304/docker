@@ -407,22 +407,6 @@ RUN set -eux; \
     fi
 
 ###########################################################################
-# Taint EXTENSION
-###########################################################################
-
-ARG INSTALL_TAINT=false
-
-RUN if [ "${INSTALL_TAINT}" = true ]; then \
-    # Install Php TAINT Extension
-    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
-      pecl install taint && \
-      echo "extension=taint.so" >> /etc/php/${LARADOCK_PHP_VERSION}/mods-available/taint.ini && \
-      ln -s /etc/php/${LARADOCK_PHP_VERSION}/mods-available/taint.ini /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/20-taint.ini && \
-      php -m | grep -q 'taint'; \
-    fi \
-;fi
-
-###########################################################################
 # Libpng16 EXTENSION
 ###########################################################################
 
@@ -980,20 +964,6 @@ RUN if [ ${INSTALL_PHPDECIMAL} = true ]; then \
       && ln -s /etc/php/${LARADOCK_PHP_VERSION}/mods-available/decimal.ini /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/30-decimal.ini \
       && php -m | grep -q 'decimal' \
     ;fi \
-;fi
-
-#####################################
-# trader:
-#####################################
-
-USER root
-
-ARG INSTALL_TRADER=false
-
-RUN if [ ${INSTALL_TRADER} = true ]; then \
-    pecl install trader \
-    && echo "extension=trader.so" >> /etc/php/${LARADOCK_PHP_VERSION}/mods-available/trader.ini \
-    && ln -s /etc/php/${LARADOCK_PHP_VERSION}/mods-available/trader.ini /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/20-trader.ini \
 ;fi
 
 #

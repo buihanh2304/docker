@@ -74,17 +74,6 @@ RUN if [ ${INSTALL_BZ2} = true ]; then \
 ;fi
 
 ###########################################################################
-# Enchant:
-###########################################################################
-
-ARG INSTALL_ENCHANT=false
-RUN if [ ${INSTALL_ENCHANT} = true ]; then \
-  apt-get install -yqq libenchant-dev; \
-  docker-php-ext-install enchant; \
-  php -m | grep -oiE '^enchant$'; \
-fi
-
-###########################################################################
 # GMP (GNU Multiple Precision):
 ###########################################################################
 
@@ -134,20 +123,10 @@ RUN if [ ${INSTALL_SSH2} = true ]; then \
 ;fi
 
 ###########################################################################
-# libfaketime:
+# SOAP:
 ###########################################################################
 
 USER root
-
-ARG INSTALL_FAKETIME=false
-
-RUN if [ ${INSTALL_FAKETIME} = true ]; then \
-    apt-get install -yqq libfaketime \
-;fi
-
-###########################################################################
-# SOAP:
-###########################################################################
 
 ARG INSTALL_SOAP=false
 
@@ -277,31 +256,6 @@ RUN set -eux; \
       docker-php-ext-enable swoole; \
       php -m | grep -q 'swoole'; \
     fi
-
-###########################################################################
-# Taint EXTENSION
-###########################################################################
-
-ARG INSTALL_TAINT=false
-
-RUN if [ ${INSTALL_TAINT} = true ]; then \
-    # Install Php TAINT Extension
-    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
-      pecl install taint && \
-      docker-php-ext-enable taint && \
-      php -m | grep -q 'taint'; \
-    fi \
-;fi
-
-###########################################################################
-# pcntl
-###########################################################################
-
-ARG INSTALL_PCNTL=false
-RUN if [ ${INSTALL_PCNTL} = true ]; then \
-    # Installs pcntl, helpful for running Horizon
-    docker-php-ext-install pcntl \
-;fi
 
 ###########################################################################
 # bcmath:
@@ -580,19 +534,6 @@ RUN if [ ${INSTALL_FFMPEG} = true ]; then \
     apt-get -y install ffmpeg \
 ;fi
 
-#####################################
-# trader:
-#####################################
-
-USER root
-
-ARG INSTALL_TRADER=false
-
-RUN if [ ${INSTALL_TRADER} = true ]; then \
-    pecl install trader \
-    && echo "extension=trader.so" >> $PHP_INI_DIR/conf.d/trader.ini \
-;fi
-
 ###########################################################################
 # CacheTool:
 ###########################################################################
@@ -695,12 +636,6 @@ ENV PGID ${PGID}
 
 RUN groupmod -o -g ${PGID} www-data && \
     usermod -o -u ${PUID} -g www-data www-data
-
-# Adding the faketime library to the preload file needs to be done last
-# otherwise it will preload it for all commands that follow in this file
-RUN if [ ${INSTALL_FAKETIME} = true ]; then \
-    echo "/usr/lib/x86_64-linux-gnu/faketime/libfaketime.so.1" > /etc/ld.so.preload \
-;fi
 
 # Configure locale.
 ARG LOCALE=POSIX

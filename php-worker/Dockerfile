@@ -29,7 +29,7 @@ RUN apk --update add wget \
 
 
 RUN pecl channel-update pecl.php.net; \
-  docker-php-ext-install mysqli mbstring pdo pdo_mysql tokenizer xml pcntl
+  docker-php-ext-install mysqli mbstring pdo pdo_mysql tokenizer xml
 
 # Add a non-root user:
 ARG PUID=1000
@@ -188,23 +188,6 @@ RUN if [ ${INSTALL_SWOOLE} = true ]; then \
   fi; \
   docker-php-ext-enable swoole \
   && php -m | grep -q 'swoole' \
-  ;fi
-
-###########################################################################
-# Taint EXTENSION
-###########################################################################
-
-ARG INSTALL_TAINT=false
-
-RUN if [ ${INSTALL_TAINT} = true ]; then \
-  # Install Php TAINT Extension
-  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
-  pecl install taint; \
-  docker-php-ext-enable taint; \
-  php -m | grep -q 'taint'; \
-  else \
-  echo 'taint not Support'; \
-  fi \
   ;fi
 
 ###########################################################################
