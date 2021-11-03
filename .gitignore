@@ -1,4 +1,9 @@
-/apache2/ssl/*.crt
-/apache2/ssl/*.key
-/nginx/ssl/*.crt
-/nginx/ssl/*.key
+/**/sites/*.conf
+!/apache2/sites/default.apache.conf
+!/nginx/sites/default.conf
+
+/**/ssl/*
+!/**/ssl/.gitkeep
+
+/logs/**/*.log
+/mysql/docker-entrypoint-initdb.d/*.sql
