@@ -1,10 +1,13 @@
 #!/bin/bash
 
 case $1 in
-    workspace | mysql | nginx | "php-fpm" | phpmyadmin)
+    mysql | nginx | "php-fpm" | phpmyadmin)
         docker-compose exec "$1" bash
         ;;
-    *)
+    root)
         docker-compose exec workspace bash
+        ;;
+    *)
+        docker-compose exec --user=laradock workspace bash
         ;;
 esac
