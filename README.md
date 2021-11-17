@@ -17,6 +17,8 @@
 
 - Mailhog
     - Web: http://localhost:8025
+    - Host: mailhog
+    - Post: 1025
 
 - Redis
     - Host: redis:6379
