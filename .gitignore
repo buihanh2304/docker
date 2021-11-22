@@ -4,6 +4,10 @@
 
 /**/ssl/*
 !/**/ssl/.gitkeep
+!/**/ssl/domains.ext.example
+!/**/ssl/RootCA.crt
+!/**/ssl/RootCA.key
+!/**/ssl/RootCA.pem
 
 /logs/**/*.log
 /mysql/docker-entrypoint-initdb.d/*.sql

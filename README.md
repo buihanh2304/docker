@@ -79,18 +79,7 @@ sudo ./bash phpmyadmin
 cd docker/nginx/ssl # for nginx
 cd docker/apache2/ssl # for apache
 
-openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.pem -subj "/C=US/CN=Local-Root-CA"
-openssl x509 -outform pem -in RootCA.pem -out RootCA.crt
-touch domains.ext
-```
-Paste code bellow to domains.ext
-```
-authorityKeyIdentifier=keyid,issuer
-basicConstraints=CA:FALSE
-keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
-subjectAltName = @alt_names
-[alt_names]
-DNS.1 = docker.dev
+cp domains.ext.example domains.ext
 ```
 change `docker.dev` to your domain, or add domain with format
 ```
