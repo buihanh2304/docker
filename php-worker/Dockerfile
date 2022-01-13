@@ -56,11 +56,7 @@ ARG INSTALL_GNUPG=false
 RUN set -eux; if [ ${INSTALL_GNUPG} = true ]; then \
   apk add --no-cache --no-progress --virtual BUILD_DEPS_PHP_GNUPG gpgme-dev; \
   apk add --no-cache --no-progress gpgme; \
-  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
-  pecl install gnupg-1.5.0RC2; \
-  else \
   pecl install gnupg; \
-  fi; \
   docker-php-ext-enable gnupg; \
   fi
 
@@ -210,7 +206,7 @@ ARG INSTALL_XMLRPC=false
 
 RUN if [ ${INSTALL_XMLRPC} = true ]; then \
   if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
-  pecl install xmlrpc-1.0.0RC2; \
+  pecl install xmlrpc-1.0.0RC3; \
   docker-php-ext-enable xmlrpc; \
   else \
   docker-php-ext-install xmlrpc; \

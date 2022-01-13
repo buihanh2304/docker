@@ -11,3 +11,5 @@
 
 /logs/**/*.log
 /mysql/docker-entrypoint-initdb.d/*.sql
+
+.env
