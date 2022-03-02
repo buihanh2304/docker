@@ -81,7 +81,7 @@ ARG INSTALL_GMP=false
 
 RUN if [ ${INSTALL_GMP} = true ]; then \
     # Install the GMP extension
-	  apt-get install -yqq libgmp-dev && \
+    apt-get install -yqq libgmp-dev && \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
       ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h \
     ;fi && \
@@ -240,7 +240,7 @@ ARG INSTALL_SWOOLE=false
 RUN set -eux; \
     if [ ${INSTALL_SWOOLE} = true ]; then \
       # Install Php Swoole Extension
-      if   [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "50600" ]; then \
+      if [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "50600" ]; then \
         pecl install swoole-2.0.10; \
       elif [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "70000" ]; then \
         pecl install swoole-4.3.5; \

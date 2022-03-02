@@ -99,14 +99,14 @@ RUN sed -i 's/\r//' /root/aliases.sh && \
     echo "" >> ~/.bashrc && \
     echo "# Load Custom Aliases" >> ~/.bashrc && \
     echo "source ~/aliases.sh" >> ~/.bashrc && \
-	  echo "" >> ~/.bashrc
+    echo "" >> ~/.bashrc
 
 USER laradock
 
 RUN echo "" >> ~/.bashrc && \
     echo "# Load Custom Aliases" >> ~/.bashrc && \
     echo "source ~/aliases.sh" >> ~/.bashrc && \
-	  echo "" >> ~/.bashrc
+    echo "" >> ~/.bashrc
 
 ###########################################################################
 # Composer:
@@ -383,7 +383,7 @@ ARG INSTALL_SWOOLE=false
 RUN set -eux; \
     if [ ${INSTALL_SWOOLE} = true ]; then \
       # Install Php Swoole Extension
-      if   [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "50600" ]; then \
+      if [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "50600" ]; then \
         echo '' | pecl -q install swoole-2.0.10; \
       elif [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "70000" ]; then \
         echo '' | pecl -q install swoole-4.3.5; \
@@ -666,11 +666,11 @@ USER root
 ARG INSTALL_PYTHON=false
 
 RUN if [ ${INSTALL_PYTHON} = true ]; then \
-  apt-get -y install python python-dev build-essential  \
-  && curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py  \
-  && python get-pip.py  \
-  && rm get-pip.py  \
-  && python -m pip install --upgrade pip  \
+  apt-get -y install python python-dev build-essential \
+  && curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py \
+  && python get-pip.py \
+  && rm get-pip.py \
+  && python -m pip install --upgrade pip \
   && python -m pip install --upgrade virtualenv \
 ;fi
 
@@ -681,11 +681,11 @@ RUN if [ ${INSTALL_PYTHON} = true ]; then \
 ARG INSTALL_PYTHON3=false
 
 RUN if [ ${INSTALL_PYTHON3} = true ]; then \
-  apt-get -y install python3 python3-dev build-essential  \
-  && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py  \
-  && python3 get-pip.py  \
-  && rm get-pip.py  \
-  && python3 -m pip install --upgrade --force-reinstall pip  \
+  apt-get -y install python3 python3-dev build-essential \
+  && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+  && python3 get-pip.py \
+  && rm get-pip.py \
+  && python3 -m pip install --upgrade --force-reinstall pip \
   && python3 -m pip install --upgrade virtualenv \
 ;fi
 
@@ -845,7 +845,7 @@ RUN set -eux; \
   ###########################################################################
   if [ ${INSTALL_YAML} = true ]; then \
     apt-get install -yqq libyaml-dev; \
-    if   [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
+    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
         echo '' | pecl install -a yaml-1.3.2; \
     elif [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ] && [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
         echo '' | pecl install yaml-2.0.4; \
