@@ -85,7 +85,7 @@ alias ccf='codecept run functional'
 alias g="gulp"
 alias npm-global="npm list -g --depth 0"
 alias ra="reload"
-alias reload="source ~/.aliases && echo \"$COL_GREEN ==> Aliases Reloaded... $COL_RESET \n \""
+alias reload="source ~/aliases.sh && echo -e \"$COL_GREEN ==> Aliases Reloaded... $COL_RESET \n \""
 alias run="npm run"
 
 # Xvfb

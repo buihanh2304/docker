@@ -98,15 +98,13 @@ RUN sed -i 's/\r//' /root/aliases.sh && \
     chown laradock:laradock /home/laradock/aliases.sh && \
     echo "" >> ~/.bashrc && \
     echo "# Load Custom Aliases" >> ~/.bashrc && \
-    echo "source ~/aliases.sh" >> ~/.bashrc && \
-    echo "" >> ~/.bashrc
+    echo "source ~/aliases.sh" >> ~/.bashrc
 
 USER laradock
 
 RUN echo "" >> ~/.bashrc && \
     echo "# Load Custom Aliases" >> ~/.bashrc && \
-    echo "source ~/aliases.sh" >> ~/.bashrc && \
-    echo "" >> ~/.bashrc
+    echo "source ~/aliases.sh" >> ~/.bashrc
 
 ###########################################################################
 # Composer:
@@ -956,6 +954,29 @@ RUN if [ ${INSTALL_PHPDECIMAL} = true ]; then \
       && php -m | grep -q 'decimal' \
     ;fi \
 ;fi
+
+
+###########################################################################
+# Laravel Auto Completion
+###########################################################################
+
+USER root
+
+COPY ./laravel.sh /root/laravel.sh
+COPY ./laravel.sh /home/laradock/laravel.sh
+
+RUN sed -i 's/\r//' /root/laravel.sh && \
+    sed -i 's/\r//' /home/laradock/laravel.sh && \
+    chown laradock:laradock /home/laradock/laravel.sh && \
+    echo "" >> ~/.bashrc && \
+    echo "# Load Laravel Auto Completion" >> ~/.bashrc && \
+    echo "source ~/laravel.sh" >> ~/.bashrc
+
+USER laradock
+
+RUN echo "" >> ~/.bashrc && \
+    echo "# Load Laravel Auto Completion" >> ~/.bashrc && \
+    echo "source ~/laravel.sh" >> ~/.bashrc
 
 #
 #--------------------------------------------------------------------------

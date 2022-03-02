@@ -1,3 +1,7 @@
 #!/bin/bash
 
-./stop && ./start
+if [ "$1" == "q" ] ; then
+    docker-compose restart
+else
+    ./stop && ./start
+fi
