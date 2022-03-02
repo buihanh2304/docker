@@ -14,8 +14,8 @@
     Options Indexes FollowSymLinks
 
     SSLEngine on
-    SSLCertificateFile /etc/apache2/ssl/ssl_site.crt
-    SSLCertificateKeyFile /etc/apache2/ssl/ssl_site.key
+    SSLCertificateFile /etc/apache2/ssl/default.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/default.key
 
     <Directory "/var/www/">
       AllowOverride All
