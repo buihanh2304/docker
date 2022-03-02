@@ -2,12 +2,11 @@
 !/apache2/sites/default.apache.conf
 !/nginx/sites/default.conf
 
-/**/ssl/*
-!/**/ssl/.gitkeep
-!/**/ssl/domains.ext.example
-!/**/ssl/RootCA.crt
-!/**/ssl/RootCA.key
-!/**/ssl/RootCA.pem
+/ssl/*
+!/ssl/domains.ext.example
+!/ssl/RootCA.crt
+!/ssl/RootCA.key
+!/ssl/RootCA.pem
 
 /logs/**/*.log
 /mysql/docker-entrypoint-initdb.d/*.sql
