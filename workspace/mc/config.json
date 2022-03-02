@@ -1,17 +1,17 @@
 {
-	"version": "8",
-	"hosts": {
-		"gcs": {
-			"url": "https://storage.googleapis.com",
-			"accessKey": "YOUR-ACCESS-KEY-HERE",
-			"secretKey": "YOUR-SECRET-KEY-HERE",
-			"api": "S3v2"
-		},
-		"s3": {
-			"url": "https://s3.amazonaws.com",
-			"accessKey": "YOUR-ACCESS-KEY-HERE",
-			"secretKey": "YOUR-SECRET-KEY-HERE",
-			"api": "S3v4"
-		}
-	}
+  "version": "8",
+  "hosts": {
+    "gcs": {
+      "url": "https://storage.googleapis.com",
+      "accessKey": "YOUR-ACCESS-KEY-HERE",
+      "secretKey": "YOUR-SECRET-KEY-HERE",
+      "api": "S3v2"
+    },
+    "s3": {
+      "url": "https://s3.amazonaws.com",
+      "accessKey": "YOUR-ACCESS-KEY-HERE",
+      "secretKey": "YOUR-SECRET-KEY-HERE",
+      "api": "S3v4"
+    }
+  }
 }

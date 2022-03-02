@@ -76,38 +76,35 @@ sudo ./bash phpmyadmin
 
 ### Create Self-Signed Cert
 ```bash
-cd docker/nginx/ssl # for nginx
-cd docker/apache2/ssl # for apache
+cd ./ssl
 
 cp domains.ext.example domains.ext
 ```
-change `docker.dev` to your domain, or add domain with format
+- Open `domains.ext`, change `docker.dev` to your domain, or add domain with format
 ```
 DNS.2 = domain.com
 DNS.3 = other-domain.com
 ```
-```bash
-openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj "/C=US/ST=YourState/L=YourCity/O=Example-Certificates/CN=localhost"
-openssl x509 -req -sha256 -days 1024 -in localhost.csr -CA RootCA.pem -CAkey RootCA.key -CAcreateserial -extfile domains.ext -out localhost.crt
-```
-Add these line to docker/nginx/sites config
+
+- Add these line to docker/nginx/sites config
 ```
 listen 443 ssl;
-ssl_certificate /etc/nginx/ssl/localhost.crt;
-ssl_certificate_key /etc/nginx/ssl/localhost.key;
+ssl_certificate /etc/nginx/ssl/default.crt;
+ssl_certificate_key /etc/nginx/ssl/default.key;
 ```
 Or Apache in `VirtualHost *:443` tag:
 ```
 SSLEngine on
-SSLCertificateFile /etc/apache2/ssl/localhost.crt
-SSLCertificateKeyFile /etc/apache2/ssl/localhost.key
+SSLCertificateFile /etc/apache2/ssl/default.crt
+SSLCertificateKeyFile /etc/apache2/ssl/default.key
 ```
+- `./restart` (if needed)
 
 ### Setting browsers to allow created certs
 #### Chrome
-Goto: `chrome://settings/certificates` > Authorities > Import > Select RootCA.crt in docker/nginx/ssl
+Goto: `chrome://settings/certificates` > Authorities > Import > Select RootCA.crt in ./ssl
 #### Firefox
-Goto: `about:preferences#privacy` > View Certificates > Authorities > Import > Select RootCA.crt in docker/nginx/ssl
+Goto: `about:preferences#privacy` > View Certificates > Authorities > Import > Select RootCA.crt in ./ssl
 
 ## Config xDebug
 - Edit `./.env` file:
