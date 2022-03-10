@@ -598,7 +598,9 @@ RUN if [ ${DOWNGRADE_OPENSSL_TLS_AND_SECLEVEL} = true ]; then \
 ###########################################################################
 
 RUN apt-get update -yqq && \
-    apt-get -y install msmtp
+    apt-get -y install ssmtp && \
+    sed -e s/mailhub=mail/mailhub=mailhog:1025/g /etc/ssmtp/ssmtp.conf > ssmtp.conf.tmp && \
+    mv ssmtp.conf.tmp /etc/ssmtp/ssmtp.conf
 
 ###########################################################################
 # Check PHP version:
