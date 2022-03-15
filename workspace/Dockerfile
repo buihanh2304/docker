@@ -978,6 +978,29 @@ RUN echo "" >> ~/.bashrc && \
     echo "# Load Laravel Auto Completion" >> ~/.bashrc && \
     echo "source ~/laravel.sh" >> ~/.bashrc
 
+
+###########################################################################
+# Magento Auto Completion
+###########################################################################
+
+USER root
+
+COPY ./magento.sh /root/magento.sh
+COPY ./magento.sh /home/laradock/magento.sh
+
+RUN sed -i 's/\r//' /root/magento.sh && \
+    sed -i 's/\r//' /home/laradock/magento.sh && \
+    chown laradock:laradock /home/laradock/magento.sh && \
+    echo "" >> ~/.bashrc && \
+    echo "# Load Laravel Auto Completion" >> ~/.bashrc && \
+    echo "source ~/magento.sh" >> ~/.bashrc
+
+USER laradock
+
+RUN echo "" >> ~/.bashrc && \
+    echo "# Load Laravel Auto Completion" >> ~/.bashrc && \
+    echo "source ~/magento.sh" >> ~/.bashrc
+
 #
 #--------------------------------------------------------------------------
 # Final Touch
