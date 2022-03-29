@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$1" == "no-cache" ] ; then
+if [ "$1" == "--nc" ] ; then
     docker-compose build --no-cache workspace php-fpm nginx mysql phpmyadmin redis mailhog
 else
     docker-compose build workspace php-fpm nginx mysql phpmyadmin redis mailhog

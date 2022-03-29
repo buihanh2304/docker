@@ -9,6 +9,7 @@
 !/ssl/RootCA.pem
 
 /logs/**/*.log
+/php-worker/supervisord.d/*.conf
 /mysql/docker-entrypoint-initdb.d/*.sql
 
 .env
