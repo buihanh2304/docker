@@ -2,6 +2,8 @@
 !/apache2/sites/default.apache.conf
 !/nginx/sites/default.conf
 
+.data
+
 /ssl/*
 !/ssl/domains.ext.example
 !/ssl/RootCA.crt
