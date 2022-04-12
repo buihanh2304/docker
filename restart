@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$1" == "q" ] ; then
+if [ "$1" == "-q" ] ; then
     docker-compose restart
 else
     ./stop && ./start
