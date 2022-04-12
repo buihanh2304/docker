@@ -17,8 +17,7 @@
 
 - Mailhog
     - Web: http://localhost:8025
-    - Host: mailhog
-    - Post: 1025
+    - SMTP: mailhog:1025
 
 - Redis
     - Host: redis:6379
@@ -40,7 +39,7 @@
 - Create `.conf` file in `apache2/sites` or `nginx/sites` folder. Examples in these folder will help you.
 - [Config SSL](#config-ssl) (optional)
 
-- **For magento**:
+- **Addition config for magento**:
     - edit `./.env` file:
     ```
     WORKSPACE_INSTALL_SOAP=true
@@ -59,12 +58,15 @@ sudo ./start
 ## Common use
 ```bash
 sudo ./build # build images
-sudo ./build no-cache # build images without cache
+sudo ./build --nc # build images without cache
 
 sudo ./start # start docker
 sudo ./stop # stop docker
+sudo ./restart # stop and start docker
+sudo ./restart -q # restart docker
 
 sudo ./bash # exec to workspace bash
+sudo ./bash root # exec to workspace bash as root user
 # exec to other service bash
 sudo ./bash nginx
 sudo ./bash php-fpm
@@ -74,7 +76,7 @@ sudo ./bash phpmyadmin
 
 ## Config SSL
 
-### Create Self-Signed Cert
+### Enable SSL for domains
 ```bash
 cd ./ssl
 
@@ -109,11 +111,14 @@ Goto: `about:preferences#privacy` > View Certificates > Authorities > Import > S
 ## Config xDebug
 - Edit `./.env` file:
 ```
-WORKSPACE_INSTALL_XDEBUG=true
+# for php-fpm debug (required)
 PHP_FPM_INSTALL_XDEBUG=true
+
+# for php-cli debug (optional)
+WORKSPACE_INSTALL_XDEBUG=true
 ```
 ### VSCode
-- Install VSCode extension: `felixfbecker.php-debug`
+- Install VSCode extension: [felixfbecker.php-debug](https://marketplace.visualstudio.com/items?itemName=xdebug.php-debug)
 - Create file `./.vscode/launch.json` with bellow content, replace `/project_path` with your project path.
 ```json
 {
@@ -131,3 +136,8 @@ PHP_FPM_INSTALL_XDEBUG=true
     ]
 }
 ```
+# Start php-fpm debug
+- Click `Listen for xDebug` in Editor/IDE toolbar.
+- PHP 8 or newer use xDebug 3 with [some changes](https://xdebug.org/docs/step_debug#activate_debugger), you must install a Browser extension for enable debug mode.
+    - [Xdebug Helper for Chrome](https://chrome.google.com/extensions/detail/eadndfjplgieldjbigjakmdgkmoaaaoc) ([source](https://github.com/mac-cain13/xdebug-helper-for-chrome)).
+    - [Xdebug Helper for Firefox](https://addons.mozilla.org/en-GB/firefox/addon/xdebug-helper-for-firefox/) ([source](https://github.com/BrianGilbert/xdebug-helper-for-firefox)).
