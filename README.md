@@ -66,7 +66,7 @@ sudo ./restart # stop and start docker
 sudo ./restart -q # restart docker
 
 sudo ./bash # exec to workspace bash
-sudo ./bash root # exec to workspace bash as root user
+sudo ./bash -r # exec to workspace bash as root user
 # exec to other service bash
 sudo ./bash nginx
 sudo ./bash php-fpm

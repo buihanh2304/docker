@@ -4,7 +4,7 @@ case $1 in
     mysql | nginx | "php-fpm" | phpmyadmin)
         docker-compose exec "$1" bash
         ;;
-    root)
+    "-r")
         docker-compose exec workspace bash
         ;;
     *)
