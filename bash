@@ -1,7 +1,7 @@
 #!/bin/bash
 
 case $1 in
-    mysql | nginx | "php-fpm" | phpmyadmin)
+    mysql | nginx | "php-fpm" | phpmyadmin | redis)
         docker-compose exec "$1" bash
         ;;
     "-r")
