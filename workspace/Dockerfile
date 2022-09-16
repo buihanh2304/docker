@@ -912,6 +912,17 @@ RUN if [ ${INSTALL_PHPDECIMAL} = true ]; then \
 ;fi
 
 ###########################################################################
+# Install Mailhog:
+###########################################################################
+
+USER root
+
+RUN apt-get update -yqq && \
+    apt-get -y install ssmtp && \
+    sed -e s/mailhub=mail/mailhub=mailhog:1025/g /etc/ssmtp/ssmtp.conf > ssmtp.conf.tmp && \
+    mv ssmtp.conf.tmp /etc/ssmtp/ssmtp.conf
+
+###########################################################################
 # xDebug:
 ###########################################################################
 
