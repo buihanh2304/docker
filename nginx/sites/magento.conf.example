@@ -1,3 +1,9 @@
+#server {
+#    listen 80;
+#    server_name laradock.dev;
+#    return 301 https://laradock.dev$request_uri;
+#}
+
 server {
     listen 80;
 
