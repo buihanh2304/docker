@@ -29,10 +29,10 @@ magento_dev() {
 
 
     if [[ $OS_TYPE == "MINGW" ]]; then
-        winpty docker exec -it $WORKSPACE_CONTAINER bash -c "${CMD}"
+        winpty docker exec --user=laradock -it $WORKSPACE_CONTAINER bash -c "${CMD}"
 
     else
-        docker exec -it $WORKSPACE_CONTAINER bash -c "${CMD}"
+        docker exec --user=laradock -it $WORKSPACE_CONTAINER bash -c "${CMD}"
     fi
 }
 
