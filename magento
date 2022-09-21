@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Grab full name of workspace container
+WORKSPACE_CONTAINER=$(docker ps | grep workspace | awk '{print $1}')
+
+# Grab OS type
+if [[ "$(uname)" == "Darwin" ]]; then
+    OS_TYPE="OSX"
+else
+    OS_TYPE=$(expr substr $(uname -s) 1 5)
+fi
+
+DIR=$1
+
+magento_dev() {
+    CMD="pwd && cd $DIR && pwd \\
+        && echo 'deploy:mode:set developer' \\
+        && php -dxdebug.mode=off bin/magento deploy:mode:set developer \\
+        && echo 'admin/security/admin_account_sharing 1' \\
+        && php -dxdebug.mode=off bin/magento config:set admin/security/admin_account_sharing 1\\
+        && echo 'admin/security/use_form_key 0' \\
+        && php -dxdebug.mode=off bin/magento config:set admin/security/use_form_key 0\\
+        && echo 'admin/security/session_lifetime 31536000' \\
+        && php -dxdebug.mode=off bin/magento config:set admin/security/session_lifetime 31536000\\
+        && echo 'admin/security/password_is_forced 0' \\
+        && php -dxdebug.mode=off bin/magento config:set admin/security/password_is_forced 0\\
+        && echo 'admin/security/password_lifetime forever' \\
+        && php -dxdebug.mode=off bin/magento config:set admin/security/password_lifetime ''"
+
+
+    if [[ $OS_TYPE == "MINGW" ]]; then
+        winpty docker exec -it $WORKSPACE_CONTAINER bash -c "${CMD}"
+
+    else
+        docker exec -it $WORKSPACE_CONTAINER bash -c "${CMD}"
+    fi
+}
+
+case $2 in
+dev | DEV)
+    magento_dev
+    ;;
+*)
+    echo "Config for Magento environment for ${WORKSPACE_CONTAINER} container."
+    echo "Magento 2 must have already been installed."
+    echo "Usage:"
+    echo "  ./magento dev"
+    ;;
+
+esac
+
+exit 1
