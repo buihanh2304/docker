@@ -1,3 +1,9 @@
+map $sent_http_content_type $expires {
+    "text/html"                 epoch;
+    "text/html; charset=utf-8"  epoch;
+    default                     off;
+}
+
 #server {
 #    listen 80;
 #    server_name laravel.test;
@@ -18,6 +24,23 @@ server {
     index index.php index.html index.htm;
 
     location / {
+        try_files $uri @proxy;
+    }
+
+    location @proxy {
+		expires $expires;
+
+		proxy_redirect                      off;
+		proxy_set_header Host               $host;
+		proxy_set_header X-Real-IP          $remote_addr;
+		proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto  $scheme;
+		proxy_read_timeout          1m;
+		proxy_connect_timeout       1m;
+		proxy_pass                          http://127.0.0.1:3000;
+    }
+
+    location ~ ^/(api|broadcasting) {
         try_files $uri $uri/ /index.php$is_args$args;
     }
 
