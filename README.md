@@ -74,6 +74,11 @@ sudo ./bash mysql
 sudo ./bash phpmyadmin
 ```
 
+- [Run without sudo](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
+```bash
+sudo ./run_without_sudo.sh
+```
+
 ## Config SSL
 
 ### Enable SSL for domains
