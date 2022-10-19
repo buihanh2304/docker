@@ -44,7 +44,7 @@ dev | DEV)
     echo "Config for Magento environment for ${WORKSPACE_CONTAINER} container."
     echo "Magento 2 must have already been installed."
     echo "Usage:"
-    echo "  ./magento dev"
+    echo "  ./magento project_directory dev"
     ;;
 
 esac
