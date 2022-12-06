@@ -91,10 +91,10 @@ install | INSTALL)
     magento_install
     ;;
 *)
-    echo "Config for Magento environment for ${WORKSPACE_CONTAINER} container."
-    echo "Magento 2 must have already been installed."
+    echo "Commands for Magento environment for ${WORKSPACE_CONTAINER} container."
     echo "Usage:"
-    echo "  ./magento project_directory dev"
+    echo "  ./magento DIR install BASE_URL DB_NAME"
+    echo "  ./magento DIR dev"
     ;;
 
 esac
