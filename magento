@@ -10,9 +10,24 @@ else
     OS_TYPE=$(expr substr $(uname -s) 1 5)
 fi
 
-DIR=$1
+DIR=$2
 URL=$3
 DB_NAME=$4
+
+magento_create() {
+    if [[ $URL == "-e" ]]; then
+        CMD="pwd && composer create-project --repository-url=https://repo.magento.com/ magento/project-enterprise-edition $DIR"
+    else
+        CMD="pwd && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition $DIR"
+    fi
+
+    if [[ $OS_TYPE == "MINGW" ]]; then
+        winpty docker exec --user=laradock -it $WORKSPACE_CONTAINER bash -c "${CMD}"
+
+    else
+        docker exec --user=laradock -it $WORKSPACE_CONTAINER bash -c "${CMD}"
+    fi
+}
 
 magento_dev() {
     CMD="pwd && cd $DIR && pwd \\
@@ -89,18 +104,22 @@ magento_install() {
     fi
 }
 
-case $2 in
+case $1 in
 dev | DEV)
     magento_dev
     ;;
 install | INSTALL)
     magento_install
     ;;
+create | CREATE)
+    magento_create
+    ;;
 *)
     echo "Commands for Magento environment for ${WORKSPACE_CONTAINER} container."
     echo "Usage:"
-    echo "  ./magento DIR install BASE_URL DB_NAME"
-    echo "  ./magento DIR dev"
+    echo "  ./magento create DIR [-e: EE version]"
+    echo "  ./magento install DIR BASE_URL DB_NAME"
+    echo "  ./magento dev DIR"
     ;;
 
 esac
