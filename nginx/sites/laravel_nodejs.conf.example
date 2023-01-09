@@ -56,6 +56,15 @@ server {
         include fastcgi_params;
     }
 
+    # location /frontend/hmr/ {
+    #     proxy_pass http://127.0.0.1:24678;
+    #     proxy_http_version 1.1;
+    #     proxy_set_header Upgrade $http_upgrade;
+    #     proxy_set_header Connection "upgrade";
+    #     proxy_set_header Host $host;
+    #     proxy_cache_bypass $http_upgrade;
+    # }
+
     location ~ /\.ht {
         deny all;
     }

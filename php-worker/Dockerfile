@@ -239,7 +239,14 @@ ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
 #
 # If you need to modify this image, feel free to do it right here.
 #
-# -- Your awesome modifications go here -- #
+
+###########################################################################
+# Install Mailhog:
+###########################################################################
+
+RUN apk --update add ssmtp && \
+    sed -e s/mailhub=mail/mailhub=mailhog:1025/g /etc/ssmtp/ssmtp.conf > ssmtp.conf.tmp && \
+    mv ssmtp.conf.tmp /etc/ssmtp/ssmtp.conf
 
 #
 #--------------------------------------------------------------------------
