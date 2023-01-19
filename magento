@@ -15,10 +15,16 @@ URL=$3
 DB_NAME=$4
 
 magento_create() {
-    if [[ $URL == "-e" ]]; then
-        CMD="pwd && composer create-project --repository-url=https://repo.magento.com/ magento/project-enterprise-edition $DIR"
+    if [[ $URL == "" ]]; then
+        VERSION=""
     else
-        CMD="pwd && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition $DIR"
+        VERSION="=$URL"
+    fi
+
+    if [[ $DB_NAME == "-e" ]]; then
+        CMD="pwd && composer create-project --repository-url=https://repo.magento.com/ magento/project-enterprise-edition$VERSION $DIR"
+    else
+        CMD="pwd && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition$VERSION $DIR"
     fi
 
     if [[ $OS_TYPE == "MINGW" ]]; then
@@ -72,7 +78,7 @@ magento_install() {
     echo "DB_NAME: $DB_NAME"
 
     EXECUTE_PHP="\$dbh = new PDO(\"mysql:host=mysql\", \"root\", \"root\");\
-    \$dbh->exec(\"CREATE DATABASE IF NOT EXISTS $DB_NAME DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci\");"
+    \$dbh->exec(\"CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci\");"
     CMD="pwd && cd $DIR && pwd \\
         && php -dxdebug.mode=off -r '$EXECUTE_PHP' \\
         && bin/magento setup:install \\
@@ -117,7 +123,7 @@ create | CREATE)
 *)
     echo "Commands for Magento environment for ${WORKSPACE_CONTAINER} container."
     echo "Usage:"
-    echo "  ./magento create DIR [-e: EE version]"
+    echo "  ./magento create DIR VERSION [-e: EE version]"
     echo "  ./magento install DIR BASE_URL DB_NAME"
     echo "  ./magento dev DIR"
     ;;
