@@ -130,4 +130,4 @@ create | CREATE)
 
 esac
 
-exit 1
+exit 0
