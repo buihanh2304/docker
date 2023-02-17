@@ -2,12 +2,37 @@
 
 # Grab full name of workspace container
 WORKSPACE_CONTAINER=$(docker ps | grep workspace | awk '{print $1}')
+WORKSPACE_NAME=$(docker ps | grep workspace | awk '{print $2}')
 
 # Grab OS type
 if [[ "$(uname)" == "Darwin" ]]; then
     OS_TYPE="OSX"
 else
     OS_TYPE=$(expr substr $(uname -s) 1 5)
+fi
+
+usage() {
+    echo "Commands for Magento environment of ${WORKSPACE_NAME} container."
+    echo "Usage:"
+    echo "  ./magento create DIR VERSION [-e: EE version]   Create new Magento project"
+    echo "  ./magento dev DIR                               Settings for developer mode"
+    echo "  ./magento deploy DIR                            Deploy after update source code"
+    echo "  ./magento install DIR BASE_URL DB_NAME          Install new Magento project"
+    exit 0
+}
+
+if [[ "$1" = "" || "$2" = "" ]]; then
+    usage
+fi
+
+BASE_DIR=$(dirname "$0")
+cd "$BASE_DIR"
+
+if [ ! -d "../magento/$2" ]; then
+    echo "Project directory does not exist!"
+    echo "Allowed values:"
+    ls -l ../magento | awk 'NR>1' | awk '{ print $NF}'
+    exit 1
 fi
 
 DIR=$2
@@ -67,6 +92,23 @@ magento_dev() {
     fi
 }
 
+magento_deploy() {
+    CMD="cd $DIR && pwd && MODE=\$(./bin/magento deploy:mode:show | awk -F[:.] '{print \$2}' | xargs) && \\
+        echo \$MODE && \\
+        php -dxdebug.mode=off ./bin/magento s:up && \\
+        if [ '\${MODE}' = 'production' ]; then \\
+            php -dxdebug.mode=off ./bin/magento s:d:c && \\
+            php -dxdebug.mode=off ./bin/magento s:s:d --content-version=\`date '+%m%d%H%M%S'\`; \\
+        fi && \\
+        php -dxdebug.mode=off ./bin/magento c:f"
+
+    if [[ $OS_TYPE == "MINGW" ]]; then
+        winpty docker exec --user=laradock -it $WORKSPACE_CONTAINER bash -c "${CMD}"
+    else
+        docker exec --user=laradock -it $WORKSPACE_CONTAINER bash -c "${CMD}"
+    fi
+}
+
 magento_install() {
     if [[ $URL == "" || $DB_NAME == "" ]]; then
         echo "Synctax error: magento DIR install BASE_URL DB_NAME"
@@ -111,21 +153,20 @@ magento_install() {
 }
 
 case $1 in
+create | CREATE)
+    magento_create
+    ;;
+deploy | DEPLOY)
+    magento_deploy
+    ;;
 dev | DEV)
     magento_dev
     ;;
 install | INSTALL)
     magento_install
     ;;
-create | CREATE)
-    magento_create
-    ;;
 *)
-    echo "Commands for Magento environment for ${WORKSPACE_CONTAINER} container."
-    echo "Usage:"
-    echo "  ./magento create DIR VERSION [-e: EE version]"
-    echo "  ./magento install DIR BASE_URL DB_NAME"
-    echo "  ./magento dev DIR"
+    usage
     ;;
 
 esac
