@@ -23,15 +23,20 @@ RUN apk --update add wget \
   cyrus-sasl-dev \
   libgsasl-dev \
   oniguruma-dev \
-  libressl \
-  libressl-dev \
-  supervisor
+  supervisor; \
+  if [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "50600" ] || \
+     [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "70000" ]; then \
+    apk --update add libressl libressl-dev; \
+  else \
+    apk --update add openssl-dev; \
+  fi
 
 
 RUN pecl channel-update pecl.php.net; \
   docker-php-ext-install mysqli mbstring pdo pdo_mysql xml pcntl; \
-  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ] && [ $(php -r "echo PHP_MINOR_VERSION;") = "1" ]; then \
-    php -m | grep -q 'tokenizer'; \
+  if [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "80100" ] || \
+     [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "80200" ]; then \
+    php -m | grep -oiE '^tokenizer$'; \
   else \
     docker-php-ext-install tokenizer; \
   fi
@@ -179,13 +184,15 @@ ARG INSTALL_SWOOLE=false
 RUN if [ ${INSTALL_SWOOLE} = true ]; then \
   # Install Php Swoole Extension
   if [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "50600" ]; then \
-    echo '' | pecl -q install swoole-2.0.10; \
+    pecl -q install swoole-2.0.10; \
   elif [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "70000" ]; then \
-    echo '' | pecl -q install swoole-4.3.5; \
+    pecl -q install swoole-4.3.5; \
   elif [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "70100" ]; then \
-    echo '' | pecl -q install swoole-4.5.11; \
+    pecl -q install swoole-4.5.11; \
+  elif [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
+      pecl install swoole-4.8.12; \
   else \
-    echo '' | pecl -q install swoole; \
+    pecl -q install swoole; \
   fi; \
   docker-php-ext-enable swoole \
   && php -m | grep -q 'swoole' \
@@ -218,6 +225,19 @@ RUN if [ ${INSTALL_XMLRPC} = true ]; then \
   fi; \
   php -m | grep -r 'xmlrpc'; \
   fi
+
+###########################################################################
+# Intl:
+###########################################################################
+
+ARG INSTALL_INTL=false
+
+RUN if [ ${INSTALL_INTL} = true ]; then \
+    apk add icu-dev && \
+    docker-php-ext-configure intl && \
+    docker-php-ext-install intl && \
+    docker-php-ext-enable intl \
+;fi
 
 #
 #--------------------------------------------------------------------------

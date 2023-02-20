@@ -274,12 +274,10 @@ USER root
 ARG INSTALL_PCOV=false
 
 RUN if [ ${INSTALL_PCOV} = true ]; then \
-  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
-    if [ $(php -r "echo PHP_MINOR_VERSION;") != "0" ]; then \
-      pecl install pcov && \
-      echo "extension=pcov.so" >> /etc/php/${LARADOCK_PHP_VERSION}/cli/php.ini && \
-      echo "pcov.enabled" >> /etc/php/${LARADOCK_PHP_VERSION}/cli/php.ini \
-    ;fi \
+  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ] || { [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ] && [ $(php -r "echo PHP_MINOR_VERSION;") != "0" ]; }; then \
+    pecl install pcov && \
+    echo "extension=pcov.so" >> /etc/php/${LARADOCK_PHP_VERSION}/cli/php.ini && \
+    echo "pcov.enabled" >> /etc/php/${LARADOCK_PHP_VERSION}/cli/php.ini \
   ;fi \
 ;fi
 
@@ -343,6 +341,8 @@ RUN set -eux; \
         echo '' | pecl -q install swoole-4.3.5; \
       elif [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "70100" ]; then \
         echo '' | pecl -q install swoole-4.5.11; \
+      elif [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
+        echo '' | pecl -q install swoole-4.8.12; \
       else \
         echo '' | pecl -q install swoole; \
       fi; \
@@ -450,7 +450,7 @@ ENV NVM_NODEJS_ORG_MIRROR ${NVM_NODEJS_ORG_MIRROR}
 RUN if [ ${INSTALL_NODE} = true ]; then \
     # Install nvm (A Node Version Manager)
     mkdir -p $NVM_DIR && \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash \
         && . $NVM_DIR/nvm.sh \
         && nvm install ${NODE_VERSION} \
         && nvm use ${NODE_VERSION} \
@@ -468,7 +468,6 @@ RUN if [ ${INSTALL_NODE} = true ]; then \
         && if [ ${INSTALL_NPM_VUE_CLI} = true ]; then \
         npm install -g @vue/cli \
         ;fi \
-        && ln -s `npm bin --global` /home/laradock/.node-bin \
 ;fi
 
 # Wouldn't execute when added to the RUN statement in the above block
@@ -487,9 +486,6 @@ RUN if [ ${INSTALL_NODE} = true ]; then \
     echo 'export NVM_DIR="/home/laradock/.nvm"' >> ~/.bashrc && \
     echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> ~/.bashrc \
 ;fi
-
-# Add PATH for node
-ENV PATH $PATH:/home/laradock/.node-bin
 
 # Make it so the node modules can be executed with 'docker-compose exec'
 # We'll create symbolic links into '/usr/local/bin'.
@@ -870,6 +866,7 @@ ARG INSTALL_PROTOC=false
 ARG PROTOC_VERSION
 
 RUN if [ ${INSTALL_PROTOC} = true ]; then \
+  apt-get -yqq install sudo wget unzip && \
   if [ ${PROTOC_VERSION} = "latest" ]; then \
     REAL_PROTOC_VERSION=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | \
       sed -nr 's/.*"tag_name":\s?"v(.+?)".*/\1/p'); \
@@ -877,10 +874,10 @@ RUN if [ ${INSTALL_PROTOC} = true ]; then \
     REAL_PROTOC_VERSION=${PROTOC_VERSION}; \
   fi && \
   PROTOC_ZIP=protoc-${REAL_PROTOC_VERSION}-linux-x86_64.zip; \
-  curl -L -o /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v${REAL_PROTOC_VERSION}/${PROTOC_ZIP} && \
-  unzip -q -o /tmp/protoc.zip -d /usr/local bin/protoc && \
-  unzip -q -o /tmp/protoc.zip -d /usr/local 'include/*' && \
-  rm -f /tmp/protoc.zip && \
+  wget https://github.com/protocolbuffers/protobuf/releases/download/v${REAL_PROTOC_VERSION}/${PROTOC_ZIP} && \
+  unzip -q -o ${PROTOC_ZIP} -d /usr/local bin/protoc && \
+  unzip -q -o ${PROTOC_ZIP} -d /usr/local 'include/*' && \
+  rm -f ${PROTOC_ZIP} && \
   chmod +x /usr/local/bin/protoc && \
   chmod -R +r /usr/local/include/google \
 ;fi
@@ -933,7 +930,11 @@ ARG INSTALL_XDEBUG=false
 RUN if [ ${INSTALL_XDEBUG} = true ]; then \
   # Install the xdebug extension
   if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
-    pecl install xdebug-3.1.4; \
+    if [ $(php -r "echo PHP_MINOR_VERSION;") = "2" ]; then \
+      pecl install xdebug-3.2.0; \
+    else \
+      pecl install xdebug-3.1.4; \
+    fi \
   else \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
       pecl install xdebug-2.5.5; \

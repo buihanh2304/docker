@@ -154,11 +154,9 @@ USER root
 ARG INSTALL_PCOV=false
 
 RUN if [ ${INSTALL_PCOV} = true ]; then \
-  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
-    if [ $(php -r "echo PHP_MINOR_VERSION;") != "0" ]; then \
-      pecl install pcov && \
-      docker-php-ext-enable pcov \
-    ;fi \
+  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ] || { [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ] && [ $(php -r "echo PHP_MINOR_VERSION;") != "0" ]; }; then \
+    pecl install pcov && \
+    docker-php-ext-enable pcov \
   ;fi \
 ;fi
 
@@ -204,6 +202,8 @@ RUN set -eux; \
         pecl install swoole-4.3.5; \
       elif [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "70100" ]; then \
         pecl install swoole-4.5.11; \
+      elif [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
+        pecl install swoole-4.8.12; \
       else \
         pecl install swoole; \
       fi; \
@@ -278,7 +278,8 @@ ARG INSTALL_LDAP=false
 
 RUN if [ ${INSTALL_LDAP} = true ]; then \
     apt-get install -yqq libldap2-dev && \
-    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
+    ARCH=$(arch) && \
+    docker-php-ext-configure ldap --with-libdir="lib/${ARCH}-linux-gnu/" && \
     docker-php-ext-install ldap \
 ;fi
 
@@ -571,7 +572,11 @@ ARG INSTALL_XDEBUG=false
 RUN if [ ${INSTALL_XDEBUG} = true ]; then \
   # Install the xdebug extension
   if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
-    pecl install xdebug-3.1.4; \
+    if [ $(php -r "echo PHP_MINOR_VERSION;") = "2" ]; then \
+      pecl install xdebug-3.2.0; \
+    else \
+      pecl install xdebug-3.1.4; \
+    fi \
   else \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
       pecl install xdebug-2.5.5; \
@@ -609,7 +614,7 @@ RUN sed -i "s/xdebug.cli_color=0/xdebug.cli_color=1/" /usr/local/etc/php/conf.d/
 # Check PHP version:
 ###########################################################################
 
-RUN set -xe; php -v | head -n 1 | grep -q "PHP ${LARADOCK_PHP_VERSION}."
+RUN set -xe; php -v | grep -q "PHP ${LARADOCK_PHP_VERSION}."
 
 #
 #--------------------------------------------------------------------------

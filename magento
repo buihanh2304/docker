@@ -94,13 +94,13 @@ magento_dev() {
 
 magento_deploy() {
     CMD="cd $DIR && pwd && MODE=\$(./bin/magento deploy:mode:show | awk -F[:.] '{print \$2}' | xargs) && \\
-        echo \$MODE && \\
-        php -dxdebug.mode=off ./bin/magento s:up && \\
+        echo \"Mode: \$MODE\" && \\
+        php -dxdebug.mode=off ./bin/magento setup:upgrade && \\
         if [ '\${MODE}' = 'production' ]; then \\
-            php -dxdebug.mode=off ./bin/magento s:d:c && \\
-            php -dxdebug.mode=off ./bin/magento s:s:d --content-version=\`date '+%m%d%H%M%S'\`; \\
+            php -dxdebug.mode=off ./bin/magento setup:di:compile && \\
+            php -dxdebug.mode=off ./bin/magento setup:static-content:deploy --content-version=\`date '+%m%d%H%M%S'\`; \\
         fi && \\
-        php -dxdebug.mode=off ./bin/magento c:f"
+        php -dxdebug.mode=off ./bin/magento cache:flush"
 
     if [[ $OS_TYPE == "MINGW" ]]; then
         winpty docker exec --user=laradock -it $WORKSPACE_CONTAINER bash -c "${CMD}"
