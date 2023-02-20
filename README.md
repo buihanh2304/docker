@@ -50,33 +50,28 @@
 - Run bash:
 ```bash
 cd docker
-sudo ./build
-sudo ./start
+./build
+./start
 ```
 - Done!
 
 ## Common use
 ```bash
-sudo ./build # build images
-sudo ./build --nc # build images without cache
+./build # build images
+./build --nc # build images without cache
 
-sudo ./start # start docker
-sudo ./stop # stop docker
-sudo ./restart # stop and start docker
-sudo ./restart -q # restart docker
+./start # start docker
+./stop # stop docker
+./restart # stop and start docker
+./restart -q # restart docker
 
-sudo ./bash # exec to workspace bash
-sudo ./bash -r # exec to workspace bash as root user
+./bash # exec to workspace bash
+./bash -r # exec to workspace bash as root user
 # exec to other service bash
-sudo ./bash nginx
-sudo ./bash php-fpm
-sudo ./bash mysql
-sudo ./bash phpmyadmin
-```
-
-- [Run without sudo](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
-```bash
-sudo ./run_without_sudo.sh
+./bash nginx
+./bash php-fpm
+./bash mysql
+./bash phpmyadmin
 ```
 
 ## Config SSL
