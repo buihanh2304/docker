@@ -29,10 +29,7 @@ BASE_DIR=$(dirname "$0")
 cd "$BASE_DIR"
 
 if [ ! -d "../magento/$2" ]; then
-    echo "Project directory does not exist!"
-    echo "Allowed values:"
-    ls -l ../magento | awk 'NR>1' | awk '{ print $NF}'
-    exit 1
+    mkdir -p "../magento/$2"
 fi
 
 DIR=$2
