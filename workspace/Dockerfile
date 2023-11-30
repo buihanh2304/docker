@@ -997,6 +997,8 @@ RUN echo "" >> ~/.bashrc && \
 
 USER root
 
+RUN sed -i "s/;date.timezone =/date.timezone = 'UTC'/" /etc/php/${LARADOCK_PHP_VERSION}/cli/php.ini
+
 COPY ./magento.sh /root/magento.sh
 COPY ./magento.sh /home/laradock/magento.sh
 
