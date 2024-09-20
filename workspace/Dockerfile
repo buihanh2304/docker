@@ -343,6 +343,8 @@ RUN set -eux; \
         echo '' | pecl -q install swoole-4.5.11; \
       elif [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
         echo '' | pecl -q install swoole-4.8.12; \
+      elif [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
+        echo '' | pecl -q install swoole-5.1.3; \
       else \
         echo '' | pecl -q install swoole; \
       fi; \
@@ -930,17 +932,13 @@ ARG INSTALL_XDEBUG=false
 RUN if [ ${INSTALL_XDEBUG} = true ]; then \
   # Install the xdebug extension
   if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
-    if [ $(php -r "echo PHP_MINOR_VERSION;") = "2" ]; then \
-      pecl install xdebug-3.2.0; \
-    else \
-      pecl install xdebug-3.1.4; \
-    fi \
+    pecl install xdebug-3.3.2; \
   else \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
       pecl install xdebug-2.5.5; \
     else \
       if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
-        pecl install xdebug-2.9.0; \
+        pecl install xdebug-2.7.2; \
       else \
         pecl install xdebug-2.9.8; \
       fi \

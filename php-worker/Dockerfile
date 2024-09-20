@@ -34,8 +34,8 @@ RUN apk --update add wget \
 
 RUN pecl channel-update pecl.php.net; \
   docker-php-ext-install mysqli mbstring pdo pdo_mysql xml pcntl; \
-  if [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "80100" ] || \
-     [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "80200" ]; then \
+  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ] && \
+     [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") != "80000" ]; then \
     php -m | grep -oiE '^tokenizer$'; \
   else \
     docker-php-ext-install tokenizer; \
@@ -191,6 +191,8 @@ RUN if [ ${INSTALL_SWOOLE} = true ]; then \
     pecl -q install swoole-4.5.11; \
   elif [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
       pecl install swoole-4.8.12; \
+  elif [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
+      pecl -q install swoole-5.1.3; \
   else \
     pecl -q install swoole; \
   fi; \
@@ -267,6 +269,14 @@ ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
 RUN apk --update add ssmtp && \
     sed -e s/mailhub=mail/mailhub=mailhog:1025/g /etc/ssmtp/ssmtp.conf > ssmtp.conf.tmp && \
     mv ssmtp.conf.tmp /etc/ssmtp/ssmtp.conf
+
+###########################################################################
+# Set Timezone
+###########################################################################
+ARG TZ=UTC
+ENV TZ ${TZ}
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+###########################################################################
 
 #
 #--------------------------------------------------------------------------
