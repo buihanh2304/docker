@@ -2,6 +2,8 @@
 
 if [ "$1" == "-q" ] ; then
     docker-compose restart
-else
+elif [ "$1" == "" ] ; then
     ./stop && ./start
+else
+    docker-compose stop $1 && docker-compose up -d $1
 fi
