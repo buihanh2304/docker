@@ -70,7 +70,7 @@ magento_dev() {
         && echo 'Config redis session' \\
         && php -dxdebug.mode=off bin/magento setup:config:set --session-save=redis --session-save-redis-host=redis \\
         && echo 'Disable TwoFactorAuth' \\
-        && if [ \${VERSION} = '2.4.6' ]; then \\
+        && if [ \${VERSION} \> '2.4.5' ]; then \\
             php -dxdebug.mode=off bin/magento module:disable --clear-static-content Magento_TwoFactorAuth Magento_AdminAdobeImsTwoFactorAuth; \\
         else \\
             php -dxdebug.mode=off bin/magento module:disable --clear-static-content Magento_TwoFactorAuth; \\
