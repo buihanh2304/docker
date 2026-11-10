@@ -143,9 +143,9 @@ magento_install() {
         --currency=USD \\
         --timezone=America/Chicago \\
         --use-rewrites=1 \\
-        --search-engine=elasticsearch7 \\
-        --elasticsearch-host=elasticsearch \\
-        --elasticsearch-port=9200"
+        --search-engine=opensearch \\
+        --opensearch-host=opensearch \\
+        --opensearch-port=9200"
 
     if [[ $OS_TYPE == "MINGW" ]]; then
         winpty docker exec --user=laradock -it $WORKSPACE_CONTAINER bash -c "${CMD}"
